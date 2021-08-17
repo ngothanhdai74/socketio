@@ -5,7 +5,33 @@
 </head>
 <body>
 
-<p>This is a paragraph.</p>
+<p>App chat.</p>
+<ul id="messages"></ul>
+<form id="chat-form">
+    <input type="text" id="chat-mes" />
+    <button id="send-chat">Gủi</button>
+</form>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const name = prompt('tên bạn là gì ?')
+    const socket = io();
+    const chatform = document.querySelector("#chat-form")
+    const chatmes = document.querySelector("#chat-mes")
+    const sendchat = document.querySelector("#send-chat")
+    const messages = document.querySelector("#messages")
 
+    chatform.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const message = chatmes.value;
+        socket.emit("on-chat", { message: message, name })
+        chatmes.value = ""; 
+    })
+    socket.on("user-chat", message => {
+        const item = document.createElement("li");
+        item.textContent = message.name +": "+ message.message;
+        messages.appendChild(item)
+    })
+
+</script>
 </body>
 </html>
